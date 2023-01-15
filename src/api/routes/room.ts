@@ -1,4 +1,6 @@
 import { Router, Request, Response } from 'express';
+import Container from 'typedi';
+import RoomService from '../../services/room';
 import db from '../../utils/db';
 
 const route = Router();
@@ -23,5 +25,28 @@ export default (app: Router) => {
         data: rooms
       }
     )
+  });
+
+  route.post('/', async (req: Request, res: Response) => {
+    // Create room
+    const { title, description, mode } = req.body;
+    const password = req.body.password;
+
+    const roomService = Container.get(RoomService);
+
+    const room = await roomService.createRoom(title, description, mode, password);
+    res.send({
+      data: room
+    });
+  });
+
+  route.post('/:id/join', async (req: Request, res: Response) => {
+    // Join the room (need password if required)
+    // Gets stream key and stuff
+  });
+
+  route.post('/:id/perform', async (req: Request, res: Response) => {
+    // Perform in the room
+    // After active, returns the response
   });
 };

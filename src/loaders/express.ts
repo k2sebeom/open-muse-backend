@@ -1,8 +1,8 @@
-import * as express from 'express';
+import express from 'express';
 
 import router from '../api';
 import config from '../config';
-import * as cors from 'cors';
+import cors from 'cors';
 
 export default async (app) => {
   app.get('/health', (req: express.Request, res: express.Response) => {

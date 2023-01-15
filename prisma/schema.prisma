@@ -15,8 +15,9 @@ model Room {
   title     String
   description String @default("")
   mode        String @default("OPEN")
-  capacity Int
+  members    Int  @default(0)
   streamKey String
   liveUrl   String
+  password  String?
   createdAt DateTime @default(now())
 }
