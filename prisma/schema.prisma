@@ -18,4 +18,5 @@ model Room {
   capacity Int
   streamKey String
   liveUrl   String
+  createdAt DateTime @default(now())
 }
