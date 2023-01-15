@@ -46,6 +46,8 @@ export default (app: Router) => {
     // Join the room (need password if required)
     // Gets stream key and stuff
     const id = parseInt(req.params.id);
+    const { username } = req.body;
+  
     // Fetch room info first
     const room = await db.room.findUnique({
       where: {
@@ -74,9 +76,14 @@ export default (app: Router) => {
         return;
       }
     }
+    const roomService = Container.get(RoomService);
+    const rtcToken = roomService.getRtcToken(`channel-${room.id}`, username);
 
     res.send({
-      data: room
+      data: {
+        ...room,
+        rtcToken
+      }
     })
   });
 

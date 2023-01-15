@@ -42,7 +42,6 @@ export default class RoomService {
         const currentTimestamp = Math.floor(Date.now() / 1000)
             
         const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds
-
         const tokenB = Agora.RtcTokenBuilder.buildTokenWithAccount(config.agoraId, config.agoraCert, channelName, account, Agora.RtcRole.PUBLISHER, privilegeExpiredTs);
         return tokenB;
     }
