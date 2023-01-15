@@ -9,8 +9,6 @@ type JoinSocketReq = {
 
 export default async (io: Server) => {
     io.on('connection', (socket) => {
-      console.log(`${socket.id} connected`);
-
       socket.on('join', async ({id, username}: JoinSocketReq) => {
         socket.join(`${id}`);
 
