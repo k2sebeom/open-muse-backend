@@ -8,6 +8,8 @@ type JoinSocketReq = {
 }
 
 export default async (io: Server) => {
+    const roomService = Container.get(RoomService);
+    roomService.io = io;
     io.on('connection', (socket) => {
       socket.on('join', async ({id, username}: JoinSocketReq) => {
         socket.join(`${id}`);

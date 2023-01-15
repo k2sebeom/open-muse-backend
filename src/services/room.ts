@@ -3,11 +3,15 @@ import { Service } from 'typedi';
 import config from '../config';
 import db from '../utils/db';
 import Agora from 'agora-access-token';
+import { Server } from 'socket.io';
 
 
 @Service()
 export default class RoomService {
     public rooms: {[roomId: number]: {[sid: number]: string}}
+    public io: Server = null;
+
+    public workers: {[roomId: number]: NodeJS.Timer} = {};
     public muxClient: Mux;
 
     constructor() {
@@ -50,6 +54,37 @@ export default class RoomService {
             data: {
                 members: this.getMembers(roomId).length
             }
+        });
+    }
+
+    public startNotifyRoomStatus(roomId: number) {
+        if(!this.workers[roomId]) {
+            this.workers[roomId] = setInterval(() => {
+                this.io.to(`${roomId}`).emit('status', {
+                    status: 'READY'
+                });
+            }, 1000);
+        }
+    }
+
+    public updateRoomStatus(roomId: number) {
+        if(this.workers[roomId]) {
+            clearInterval(this.workers[roomId]);
+        }
+        this.workers[roomId] = setInterval(() => {
+            this.io.to(`${roomId}`).emit('status', {
+                status: 'PERFORMING'
+            });
+        }, 1000);
+    }
+
+    public endNotifyRoomStatus(roomId: number) {
+        if(this.workers[roomId]) {
+            clearInterval(this.workers[roomId]);
+            delete this.workers[roomId];
+        }
+        this.io.to(`${roomId}`).emit('status', {
+            status: 'CHATTING'
         });
     }
 
