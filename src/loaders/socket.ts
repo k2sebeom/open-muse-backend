@@ -42,4 +42,8 @@ export default async (io: Server) => {
         })
       })
     });
+
+    io.of('/studio').on('connection', (socket) => {
+        console.log("Device socket connected");
+    })
 };
