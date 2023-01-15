@@ -43,6 +43,39 @@ export default (app: Router) => {
   route.post('/:id/join', async (req: Request, res: Response) => {
     // Join the room (need password if required)
     // Gets stream key and stuff
+    const id = parseInt(req.params.id);
+    // Fetch room info first
+    const room = await db.room.findUnique({
+      where: {
+        id
+      }
+    });
+    if (!room) {
+      res.status(404).send({
+        data: `Room with id ${id} not found`
+      });
+      return;
+    }
+
+    if(room.password != null) {
+      const password = req.body.password;
+      if(!password) {
+        res.status(401).send({
+          data: "This room is locked by password"
+        })
+        return;
+      }
+      if(password !== room.password) {
+        res.status(401).send({
+          data: "Password is incorrect"
+        })
+        return;
+      }
+    }
+
+    res.send({
+      data: room
+    })
   });
 
   route.post('/:id/perform', async (req: Request, res: Response) => {

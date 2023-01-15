@@ -6,7 +6,7 @@ import db from '../utils/db';
 
 @Service()
 export default class RoomService {
-    public rooms: {[roomId: number]: {[sid: number]: string[]}}
+    public rooms: {[roomId: number]: {[sid: number]: string}}
     public muxClient: Mux;
 
     constructor() {
