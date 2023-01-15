@@ -16,7 +16,7 @@ export default (app: Router) => {
 
     const roomService = Container.get(RoomService);
 
-    const room = await db.room.findUnique({
+    const room = await db.room.findFirst({
       where: {
         streamKey: body.data.stream_key
       }
