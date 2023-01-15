@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 import express from 'express';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 import config from './config';
 
 import loaders from './loaders';
@@ -7,9 +9,17 @@ import loaders from './loaders';
 async function runServer() {
   const app = express();
 
-  await loaders({ expressApp: app });
+  const server = createServer(app);
 
-  app.listen(config.port, () => {
+  const io = new Server(server, {
+    cors: {
+      origin: '*'      
+    }
+  });
+
+  await loaders({ expressApp: app, io });
+
+  server.listen(config.port, () => {
     console.log(`
             ####################################
             🛡️  Server listening on port: ${config.port} 🛡️

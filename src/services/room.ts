@@ -36,6 +36,43 @@ export default class RoomService {
         return room;
     }
 
+    public async addMember(roomId: string, sid: string, username: string) {
+        if(this.rooms[roomId]) {
+            this.rooms[roomId][sid] = username;
+        }
+        else {
+            this.rooms[roomId] = { [sid]: username};
+        }
+        await db.room.update({
+            where: {
+                id: parseInt(roomId)
+            },
+            data: {
+                members: this.getMembers(roomId).length
+            }
+        });
+    }
+
+    public async removeMember(roomId: string, sid: string): Promise<string> {
+        if(this.rooms[roomId]) {
+            const username = this.rooms[roomId][sid];
+            delete this.rooms[roomId][sid];
+            await db.room.update({
+                where: {
+                    id: parseInt(roomId)
+                },
+                data: {
+                    members: this.getMembers(roomId).length
+                }
+            });
+            return username;
+        }
+    }
+
+    public getMembers(roomId: string): string[] {
+        return Object.values(this.rooms[roomId]);
+    }
+
     public getRtcToken = (channelName: string, account: string): string => {
         const expirationTimeInSeconds = 3600
         
