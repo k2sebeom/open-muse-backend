@@ -2,6 +2,7 @@ import Mux from '@mux/mux-node';
 import { Service } from 'typedi';
 import config from '../config';
 import db from '../utils/db';
+import Agora from 'agora-access-token';
 
 
 @Service()
@@ -33,5 +34,16 @@ export default class RoomService {
         });
 
         return room;
+    }
+
+    public getRtcToken = (channelName: string, account: string): string => {
+        const expirationTimeInSeconds = 3600
+        
+        const currentTimestamp = Math.floor(Date.now() / 1000)
+            
+        const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds
+
+        const tokenB = Agora.RtcTokenBuilder.buildTokenWithAccount(config.agoraId, config.agoraCert, channelName, account, Agora.RtcRole.PUBLISHER, privilegeExpiredTs);
+        return tokenB;
     }
 }
