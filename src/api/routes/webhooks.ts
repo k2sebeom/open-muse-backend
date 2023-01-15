@@ -21,9 +21,10 @@ export default (app: Router) => {
         streamKey: body.data.stream_key
       }
     });
-
+    console.log(body.type)
     if(body.type === 'video.live_stream.connected') {
       roomService.startNotifyRoomStatus(room.id);
+      console.log(room.id);
     }
     else if(body.type === 'video.live_stream.active') {
       roomService.updateRoomStatus(room.id);
