@@ -29,9 +29,9 @@ export default async (io: Server) => {
         // });
 
         socket.on('perform', (data) => {
-          setTimeout(() => {
-            socket.broadcast.to(`${id}`).emit('perform', { state: data, id: socket.id });
-          }, 20000);
+          socket.broadcast.to(`${id}`).emit('perform', {
+            performer: username
+          });
         });
 
         socket.on('disconnect', async (reason) => {
