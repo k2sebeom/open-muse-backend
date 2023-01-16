@@ -8,7 +8,7 @@ import { Server } from 'socket.io';
 @Service()
 export default class RoomService {
   public rooms: { [roomId: number]: { [sid: number]: string } };
-  public performers: { [roomId: number]: string | null };
+  public performers: { [roomId: number]: string | null } = {};
 
   public io: Server = null;
 
