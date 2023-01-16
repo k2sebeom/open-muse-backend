@@ -46,8 +46,11 @@ export default async (io: Server) => {
     });
 
     io.of('/studio').on('connection', (socket) => {
-        socket.on('reqJoinDeviceCh', ({ email }) => {
+        socket.on('reqJoinDeviceCh', (data) => {
+          const email = data.email;
           socket.join(email);
+
+          socket.broadcast.to(email).emit('recJoinDeviceCh', data);
 
           socket.on('reqConnect', data => {
             socket.broadcast.to(email).emit('recConnect', data);
