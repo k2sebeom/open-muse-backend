@@ -46,6 +46,33 @@ export default async (io: Server) => {
     });
 
     io.of('/studio').on('connection', (socket) => {
-        console.log("Device socket connected");
+        socket.on('reqJoinDeviceCh', ({ email }) => {
+          console.log(email);
+          socket.join(email);
+
+          socket.on('reqConnect', data => {
+            socket.broadcast.to(email).emit('recConnect', data);
+          })
+
+          socket.on('reqDisconnect', data => {
+            socket.broadcast.to(email).emit('recDisconnect', data);
+          })
+
+          socket.on('reqStream', data => {
+            socket.broadcast.to(email).emit('recStream', data);
+          })
+
+          socket.on('reqStreamEnded', data => {
+            socket.broadcast.to(email).emit('recStreamEnded', data);
+          })
+
+          socket.on('reqHealthCheck', (data) => {
+            socket.broadcast.to(email).emit('recHealthCheck', data);
+          })
+
+          socket.on('disconnect', (data) => {
+            socket.broadcast.to(email).emit('recLeaveDeviceCh', data);
+          })
+        });
     })
 };
