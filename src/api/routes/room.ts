@@ -28,6 +28,12 @@ export default (app: Router) => {
 
   route.get('/:id', async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
+    if(!id) {
+      res.status(400).send({
+        msg: "Room id should be a number"
+      })
+      return;
+    }
 
     const room = await db.room.findFirst({
       where: {id}
