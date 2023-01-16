@@ -47,7 +47,6 @@ export default async (io: Server) => {
 
     io.of('/studio').on('connection', (socket) => {
         socket.on('reqJoinDeviceCh', ({ email }) => {
-          console.log(email);
           socket.join(email);
 
           socket.on('reqConnect', data => {
