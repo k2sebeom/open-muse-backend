@@ -26,6 +26,21 @@ export default (app: Router) => {
     });
   });
 
+  route.get('/:id', async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+
+    const room = await db.room.findFirst({
+      where: {id}
+    });
+    if(!room) {
+      res.sendStatus(404);
+      return;
+    };
+    res.send({
+      data: room,
+    });
+  });
+
   route.post('/', async (req: Request, res: Response) => {
     // Create room
     const { title, description, mode } = req.body;
