@@ -4,29 +4,26 @@ import RoomService from '../../services/room';
 import db from '../../utils/db';
 import Agora from 'agora-access-token';
 
-
 const route = Router();
 
 export default (app: Router) => {
   app.use('/room', route);
 
   route.get('/list', async (req: Request, res: Response) => {
-    const page = parseInt(!req.query.page ? '1' : req.query.page as string);
+    const page = parseInt(!req.query.page ? '1' : (req.query.page as string));
     const take = 10;
 
     const rooms = await db.room.findMany({
       orderBy: {
-        createdAt: 'asc'
+        createdAt: 'asc',
       },
       skip: (page - 1) * take,
-      take
-    })
+      take,
+    });
 
-    res.send(
-      {
-        data: rooms
-      }
-    )
+    res.send({
+      data: rooms,
+    });
   });
 
   route.post('/', async (req: Request, res: Response) => {
@@ -36,9 +33,14 @@ export default (app: Router) => {
 
     const roomService = Container.get(RoomService);
 
-    const room = await roomService.createRoom(title, description, mode, password);
+    const room = await roomService.createRoom(
+      title,
+      description,
+      mode,
+      password
+    );
     res.send({
-      data: room
+      data: room,
     });
   });
 
@@ -47,32 +49,32 @@ export default (app: Router) => {
     // Gets stream key and stuff
     const id = parseInt(req.params.id);
     const { username } = req.body;
-  
+
     // Fetch room info first
     const room = await db.room.findUnique({
       where: {
-        id
-      }
+        id,
+      },
     });
     if (!room) {
       res.status(404).send({
-        data: `Room with id ${id} not found`
+        data: `Room with id ${id} not found`,
       });
       return;
     }
 
-    if(room.password != null) {
+    if (room.password != null) {
       const password = req.body.password;
-      if(!password) {
+      if (!password) {
         res.status(401).send({
-          data: "This room is locked by password"
-        })
+          data: 'This room is locked by password',
+        });
         return;
       }
-      if(password !== room.password) {
+      if (password !== room.password) {
         res.status(401).send({
-          data: "Password is incorrect"
-        })
+          data: 'Password is incorrect',
+        });
         return;
       }
     }
@@ -82,9 +84,9 @@ export default (app: Router) => {
     res.send({
       data: {
         ...room,
-        rtcToken
-      }
-    })
+        rtcToken,
+      },
+    });
   });
 
   route.post('/:id/perform', async (req: Request, res: Response) => {

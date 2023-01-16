@@ -5,7 +5,6 @@ import Container from 'typedi';
 import RoomService from '../../services/room';
 import db from '../../utils/db';
 
-
 const route = Router();
 
 export default (app: Router) => {
@@ -18,20 +17,18 @@ export default (app: Router) => {
 
     const room = await db.room.findFirst({
       where: {
-        streamKey: body.data.stream_key
-      }
+        streamKey: body.data.stream_key,
+      },
     });
 
-    if(body.type === 'video.live_stream.connected') {
+    if (body.type === 'video.live_stream.connected') {
       roomService.startNotifyRoomStatus(room.id);
-    }
-    else if(body.type === 'video.live_stream.active') {
+    } else if (body.type === 'video.live_stream.active') {
       roomService.updateRoomStatus(room.id);
-    }
-    else if(body.type === 'video.live_stream.disconnected') {
+    } else if (body.type === 'video.live_stream.disconnected') {
       roomService.endNotifyRoomStatus(room.id);
     }
 
     res.send(req.body);
-  })
+  });
 };

@@ -13,9 +13,9 @@ async function runServer() {
 
   const io = new Server(server, {
     cors: {
-      origin: '*'      
+      origin: '*',
     },
-    allowEIO3: true
+    allowEIO3: true,
   });
 
   await loaders({ expressApp: app, io });
