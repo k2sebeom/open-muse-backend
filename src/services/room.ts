@@ -43,6 +43,7 @@ export default class RoomService {
         password,
         streamKey: stream.stream_key,
         liveUrl: `https://stream.mux.com/${stream.playback_ids[0].id}.m3u8`,
+        liveStreamId: stream.id
       },
     });
 
@@ -79,14 +80,16 @@ export default class RoomService {
     }
   }
 
-  public updateRoomStatus(roomId: number) {
+  public updateRoomStatus(roomId: number, url: string) {
     if (this.workers[roomId]) {
       clearInterval(this.workers[roomId]);
     }
+
     this.workers[roomId] = setInterval(() => {
       this.io.to(`${roomId}`).emit('status', {
         status: 'PERFORMING',
         performer: this.performers[`${roomId}`],
+        playUrl: url
       });
     }, 1000);
   }

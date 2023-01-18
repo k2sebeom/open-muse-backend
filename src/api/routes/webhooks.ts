@@ -17,15 +17,15 @@ export default (app: Router) => {
 
     const room = await db.room.findFirst({
       where: {
-        streamKey: body.data.stream_key,
+        liveStreamId: body.data.live_stream_id
       },
     });
 
-    if (body.type === 'video.live_stream.connected') {
+    if (body.type === 'video.asset.created') {
       roomService.startNotifyRoomStatus(room.id);
-    } else if (body.type === 'video.live_stream.active') {
-      roomService.updateRoomStatus(room.id);
-    } else if (body.type === 'video.live_stream.disconnected') {
+    } else if (body.type === 'video.asset.ready') {
+      roomService.updateRoomStatus(room.id, 'https://stream.mux.com/' + body.data.playback_ids[0].id + '.m3u8');
+    } else if (body.type === 'video.asset.live_stream_completed') {
       roomService.endNotifyRoomStatus(room.id);
     }
 
