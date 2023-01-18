@@ -31,9 +31,6 @@ export default async (io: Server) => {
       // });
 
       socket.on('perform', (data) => {
-        socket.broadcast.to(`${id}`).emit('perform', {
-          performer: username,
-        });
         roomService.setPerformer(`${id}`, username);
       });
 
