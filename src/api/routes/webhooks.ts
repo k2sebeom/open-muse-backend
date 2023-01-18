@@ -17,15 +17,15 @@ export default (app: Router) => {
 
     const room = await db.room.findFirst({
       where: {
-        liveStreamId: body.data.live_stream_id
+        liveStreamId: body.id
       },
     });
 
-    if (body.type === 'video.asset.created') {
+    if (body.type === 'video.live_stream.connected') {
       roomService.startNotifyRoomStatus(room.id);
-    } else if (body.type === 'video.asset.ready') {
-      roomService.updateRoomStatus(room.id, body.data.playback_ids[0].id);
-    } else if (body.type === 'video.asset.live_stream_completed') {
+    } else if (body.type === 'video.live_stream.active') {
+      roomService.updateRoomStatus(room.id, room.playbackId);
+    } else if (body.type === 'video.live_stream.disconnected') {
       roomService.endNotifyRoomStatus(room.id);
     }
 

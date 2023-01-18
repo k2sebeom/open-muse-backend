@@ -43,7 +43,7 @@ export default class RoomService {
         mode,
         password,
         streamKey: stream.stream_key,
-        liveUrl: `https://stream.mux.com/${stream.playback_ids[0].id}.m3u8`,
+        playbackId: stream.playback_ids[0].id,
         liveStreamId: stream.id
       },
     });
