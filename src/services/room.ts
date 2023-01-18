@@ -56,14 +56,19 @@ export default class RoomService {
     } else {
       this.rooms[roomId] = { [sid]: username };
     }
-    await db.room.update({
-      where: {
-        id: parseInt(roomId),
-      },
-      data: {
-        members: this.getMembers(roomId).length,
-      },
-    });
+    try {
+      await db.room.update({
+        where: {
+          id: parseInt(roomId),
+        },
+        data: {
+          members: this.getMembers(roomId).length,
+        },
+      });
+    }
+    catch {
+      console.error("Room does not exist");
+    }
   }
 
   public async setPerformer(roomId: string, performer: string | null) {
