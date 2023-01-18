@@ -80,6 +80,7 @@ export default class RoomService {
       this.workers[roomId] = setInterval(() => {
         this.io.to(`${roomId}`).emit('status', {
           status: 'READY',
+          performer: this.performers[`${roomId}`],
         });
       }, 1000);
     }
