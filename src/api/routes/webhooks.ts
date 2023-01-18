@@ -17,7 +17,7 @@ export default (app: Router) => {
 
     const room = await db.room.findFirst({
       where: {
-        liveStreamId: body.id
+        liveStreamId: body.data.id
       },
     });
 
