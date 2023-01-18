@@ -24,7 +24,7 @@ export default (app: Router) => {
     if (body.type === 'video.asset.created') {
       roomService.startNotifyRoomStatus(room.id);
     } else if (body.type === 'video.asset.ready') {
-      roomService.updateRoomStatus(room.id, 'https://stream.mux.com/' + body.data.playback_ids[0].id + '.m3u8');
+      roomService.updateRoomStatus(room.id, body.data.playback_ids[0].id);
     } else if (body.type === 'video.asset.live_stream_completed') {
       roomService.endNotifyRoomStatus(room.id);
     }

@@ -32,8 +32,7 @@ export default class RoomService {
         playback_policy: 'public',
         mp4_support: "standard"
       },
-      latency_mode: 'standard',
-      reconnect_window: 0,
+      latency_mode: 'low',
       audio_only: true,
     });
 
